@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,6 +8,7 @@
     <title>RetailIQ - AI Sales & Inventory Copilot</title>
 
     <style>
+
         * {
             box-sizing: border-box;
         }
@@ -23,6 +25,8 @@
             max-width: 1250px;
             margin: auto;
         }
+
+        /* HEADER */
 
         header {
             background: #111827;
@@ -55,7 +59,7 @@
             font-size: 13px;
         }
 
-        /* Summary */
+        /* SUMMARY */
 
         .summary-grid {
             display: grid;
@@ -83,7 +87,7 @@
             color: #111827;
         }
 
-        /* Sections */
+        /* SECTIONS */
 
         .section {
             background: white;
@@ -169,7 +173,7 @@
             font-size: 12px;
         }
 
-        /* Insights */
+        /* SMART INSIGHTS */
 
         .insights-grid {
             display: grid;
@@ -198,13 +202,10 @@
             font-size: 14px;
         }
 
-        .insight-item:last-child {
-            margin-bottom: 0;
-        }
-
         .item-name {
             font-weight: bold;
             color: #111827;
+            margin-bottom: 5px;
         }
 
         .danger {
@@ -228,7 +229,185 @@
             font-size: 14px;
         }
 
-        /* Table */
+        /* ADVANCED */
+
+        .advanced-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
+        }
+
+        .advanced-card {
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 14px;
+            padding: 20px;
+        }
+
+        .advanced-card h3 {
+            margin-top: 0;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+
+        /* HEALTH */
+
+        .health-card {
+            grid-column: span 2;
+        }
+
+        .health-layout {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+        }
+
+        .health-score {
+            width: 130px;
+            height: 130px;
+            border-radius: 50%;
+            background: #f1f5f9;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            flex-shrink: 0;
+        }
+
+        .health-score-number {
+            font-size: 34px;
+            font-weight: bold;
+            color: #111827;
+        }
+
+        .health-label {
+            font-size: 13px;
+            color: #64748b;
+        }
+
+        .health-details {
+            flex: 1;
+        }
+
+        .health-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .health-row:last-child {
+            border-bottom: none;
+        }
+
+        /* ACTION CENTER */
+
+        .action-item {
+            padding: 14px;
+            border-radius: 9px;
+            background: #f8fafc;
+            margin-bottom: 10px;
+            border-left: 4px solid #2563eb;
+        }
+
+        .action-item.urgent {
+            border-left-color: #dc2626;
+        }
+
+        .action-item.high {
+            border-left-color: #f59e0b;
+        }
+
+        .action-item.review {
+            border-left-color: #2563eb;
+        }
+
+        .action-priority {
+            font-size: 11px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .action-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .action-reason {
+            color: #64748b;
+            font-size: 13px;
+            line-height: 1.5;
+            margin-bottom: 6px;
+        }
+
+        .action-do {
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        /* TREND */
+
+        .trend-summary {
+            padding: 15px;
+            background: #f8fafc;
+            border-radius: 10px;
+            margin-bottom: 12px;
+        }
+
+        .trend-direction {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .trend-rising {
+            color: #16a34a;
+        }
+
+        .trend-falling {
+            color: #dc2626;
+        }
+
+        .trend-stable {
+            color: #64748b;
+        }
+
+        .daily-sales {
+            max-height: 260px;
+            overflow-y: auto;
+        }
+
+        .daily-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 10px;
+            border-bottom: 1px solid #e5e7eb;
+            font-size: 13px;
+        }
+
+        /* ANOMALIES */
+
+        .anomaly-item {
+            padding: 13px;
+            margin-bottom: 9px;
+            background: #fff7ed;
+            border-left: 4px solid #f97316;
+            border-radius: 8px;
+        }
+
+        .anomaly-type {
+            font-size: 12px;
+            font-weight: bold;
+            margin-top: 4px;
+        }
+
+        .anomaly-details {
+            font-size: 13px;
+            color: #64748b;
+            margin-top: 5px;
+        }
+
+        /* TABLE */
 
         .table-wrapper {
             overflow-x: auto;
@@ -269,19 +448,26 @@
             font-size: 13px;
         }
 
-        /* Responsive */
+        /* RESPONSIVE */
 
         @media (max-width: 900px) {
+
             .summary-grid {
                 grid-template-columns: repeat(2, 1fr);
             }
 
-            .insights-grid {
+            .insights-grid,
+            .advanced-grid {
                 grid-template-columns: 1fr;
+            }
+
+            .health-card {
+                grid-column: span 1;
             }
         }
 
         @media (max-width: 600px) {
+
             .summary-grid {
                 grid-template-columns: 1fr;
             }
@@ -295,21 +481,41 @@
             .question-row {
                 flex-direction: column;
             }
+
+            .health-layout {
+                flex-direction: column;
+                align-items: flex-start;
+            }
         }
+
     </style>
 </head>
+
 
 <body>
 
 <header>
+
     <div class="container header-content">
+
         <div>
-            <div class="logo">📊 RetailIQ</div>
-            <div class="subtitle">AI Sales & Inventory Copilot</div>
+
+            <div class="logo">
+                📊 RetailIQ
+            </div>
+
+            <div class="subtitle">
+                AI Sales & Inventory Copilot
+            </div>
+
         </div>
 
-        <div class="status">● System Online</div>
+        <div class="status">
+            ● System Online
+        </div>
+
     </div>
+
 </header>
 
 
@@ -320,23 +526,46 @@
     <div class="summary-grid">
 
         <div class="summary-card">
-            <div class="summary-title">Total Products</div>
-            <div class="summary-value" id="totalProducts">-</div>
+            <div class="summary-title">
+                Total Products
+            </div>
+
+            <div class="summary-value" id="totalProducts">
+                -
+            </div>
         </div>
 
-        <div class="summary-card">
-            <div class="summary-title">Total Stock</div>
-            <div class="summary-value" id="totalStock">-</div>
-        </div>
 
         <div class="summary-card">
-            <div class="summary-title">Units Sold</div>
-            <div class="summary-value" id="totalUnitsSold">-</div>
+            <div class="summary-title">
+                Total Stock
+            </div>
+
+            <div class="summary-value" id="totalStock">
+                -
+            </div>
         </div>
 
+
         <div class="summary-card">
-            <div class="summary-title">Low Stock Products</div>
-            <div class="summary-value" id="lowStockProducts">-</div>
+            <div class="summary-title">
+                Units Sold
+            </div>
+
+            <div class="summary-value" id="totalUnitsSold">
+                -
+            </div>
+        </div>
+
+
+        <div class="summary-card">
+            <div class="summary-title">
+                Low Stock Products
+            </div>
+
+            <div class="summary-value" id="lowStockProducts">
+                -
+            </div>
         </div>
 
     </div>
@@ -350,6 +579,7 @@
             🤖 Ask RetailIQ
         </div>
 
+
         <div class="question-row">
 
             <input
@@ -359,7 +589,9 @@
                 onkeydown="handleEnter(event)"
             >
 
-            <button class="ask-btn" onclick="askRetailIQ()">
+            <button
+                class="ask-btn"
+                onclick="askRetailIQ()">
                 Ask AI
             </button>
 
@@ -368,27 +600,32 @@
 
         <div class="quick-buttons">
 
-            <button class="quick-btn"
+            <button
+                class="quick-btn"
                 onclick="setQuestion('What are the best selling products?')">
                 🔥 Best Sellers
             </button>
 
-            <button class="quick-btn"
+            <button
+                class="quick-btn"
                 onclick="setQuestion('Which products are low in stock?')">
                 🚨 Low Stock
             </button>
 
-            <button class="quick-btn"
+            <button
+                class="quick-btn"
                 onclick="setQuestion('Which products are slow moving?')">
                 🐢 Slow Moving
             </button>
 
-            <button class="quick-btn"
+            <button
+                class="quick-btn"
                 onclick="setQuestion('Which products generate the highest revenue?')">
                 💰 Highest Revenue
             </button>
 
-            <button class="quick-btn"
+            <button
+                class="quick-btn"
                 onclick="setQuestion('Which products should I restock first?')">
                 📦 Restock Advice
             </button>
@@ -396,12 +633,20 @@
         </div>
 
 
-        <div class="ai-response" id="aiResponse">
+        <div
+            class="ai-response"
+            id="aiResponse">
+
             Ask a question to get an AI-powered analysis.
+
         </div>
 
+
         <div class="evidence">
-            📁 Evidence: sales.csv + inventory.csv + products.csv
+
+            📁 Evidence:
+            sales.csv + inventory.csv + products.csv
+
         </div>
 
     </div>
@@ -415,13 +660,14 @@
             🧠 Smart Business Insights
         </div>
 
-        <div class="insights-grid">
 
-            <!-- STOCK OUT RISK -->
+        <div class="insights-grid">
 
             <div class="insight-card">
 
-                <h3>🚨 Stock-out Risk</h3>
+                <h3>
+                    🚨 Stock-out Risk
+                </h3>
 
                 <div id="stockOutRisk">
                     Loading...
@@ -430,11 +676,11 @@
             </div>
 
 
-            <!-- RESTOCK PRIORITY -->
-
             <div class="insight-card">
 
-                <h3>📦 Restock Priority</h3>
+                <h3>
+                    📦 Restock Priority
+                </h3>
 
                 <div id="restockPriority">
                     Loading...
@@ -443,11 +689,11 @@
             </div>
 
 
-            <!-- SLOW MOVING -->
-
             <div class="insight-card">
 
-                <h3>🐢 Slow Moving Products</h3>
+                <h3>
+                    🐢 Slow Moving Products
+                </h3>
 
                 <div id="slowMoving">
                     Loading...
@@ -456,11 +702,11 @@
             </div>
 
 
-            <!-- OVERSTOCK -->
-
             <div class="insight-card">
 
-                <h3>📊 Overstock Products</h3>
+                <h3>
+                    📊 Overstock Products
+                </h3>
 
                 <div id="overstock">
                     Loading...
@@ -469,11 +715,11 @@
             </div>
 
 
-            <!-- TOP SELLERS -->
-
             <div class="insight-card">
 
-                <h3>🔥 Top Sellers</h3>
+                <h3>
+                    🔥 Top Sellers
+                </h3>
 
                 <div id="topSellers">
                     Loading...
@@ -482,13 +728,160 @@
             </div>
 
 
-            <!-- REVENUE LEADERS -->
-
             <div class="insight-card">
 
-                <h3>💰 Revenue Leaders</h3>
+                <h3>
+                    💰 Revenue Leaders
+                </h3>
 
                 <div id="revenueLeaders">
+                    Loading...
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ADVANCED RETAIL INTELLIGENCE -->
+
+    <div class="section">
+
+        <div class="section-title">
+            🚀 Advanced Retail Intelligence
+        </div>
+
+
+        <div class="advanced-grid">
+
+
+            <!-- HEALTH -->
+
+            <div class="advanced-card health-card">
+
+                <h3>
+                    🏥 Business Health Score
+                </h3>
+
+
+                <div class="health-layout">
+
+                    <div class="health-score">
+
+                        <div
+                            class="health-score-number"
+                            id="healthScore">
+                            -
+                        </div>
+
+                        <div class="health-label">
+                            / 100
+                        </div>
+
+                    </div>
+
+
+                    <div class="health-details">
+
+                        <div class="health-row">
+
+                            <span>
+                                Overall Status
+                            </span>
+
+                            <strong id="healthLabel">
+                                Loading...
+                            </strong>
+
+                        </div>
+
+
+                        <div class="health-row">
+
+                            <span>
+                                Low Stock Products
+                            </span>
+
+                            <strong id="healthLowStock">
+                                -
+                            </strong>
+
+                        </div>
+
+
+                        <div class="health-row">
+
+                            <span>
+                                Critical Products
+                            </span>
+
+                            <strong id="healthCritical">
+                                -
+                            </strong>
+
+                        </div>
+
+
+                        <div class="health-row">
+
+                            <span>
+                                Slow Moving Products
+                            </span>
+
+                            <strong id="healthSlow">
+                                -
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- ACTION CENTER -->
+
+            <div class="advanced-card">
+
+                <h3>
+                    🎯 Manager Action Center
+                </h3>
+
+                <div id="actionCenter">
+                    Loading...
+                </div>
+
+            </div>
+
+
+            <!-- SALES TREND -->
+
+            <div class="advanced-card">
+
+                <h3>
+                    📈 Sales Trend Analysis
+                </h3>
+
+                <div id="salesTrends">
+                    Loading...
+                </div>
+
+            </div>
+
+
+            <!-- ANOMALIES -->
+
+            <div class="advanced-card">
+
+                <h3>
+                    🚨 Sales Anomalies
+                </h3>
+
+                <div id="salesAnomalies">
                     Loading...
                 </div>
 
@@ -507,6 +900,7 @@
             📦 Product Inventory & Sales
         </div>
 
+
         <div class="table-wrapper">
 
             <table>
@@ -514,23 +908,34 @@
                 <thead>
 
                     <tr>
+
                         <th>Product</th>
+
                         <th>Category</th>
+
                         <th>Price</th>
+
                         <th>Units Sold</th>
+
                         <th>Current Stock</th>
+
                         <th>Revenue</th>
+
                         <th>Status</th>
+
                     </tr>
 
                 </thead>
 
+
                 <tbody id="productTable">
 
                     <tr>
+
                         <td colspan="7">
                             Loading...
                         </td>
+
                     </tr>
 
                 </tbody>
@@ -545,323 +950,406 @@
 
 
 <footer>
+
     RetailIQ — AI-powered retail intelligence
+
 </footer>
 
 
 <script>
 
-    /* =========================
-       SUMMARY
-    ========================= */
+/* ============================================================
+   SUMMARY
+============================================================ */
 
-    async function loadSummary() {
+async function loadSummary() {
 
-        try {
+    try {
 
-            const response = await fetch("/api/summary");
+        const response = await fetch("/api/summary");
 
-            const data = await response.json();
+        const data = await response.json();
 
-            document.getElementById("totalProducts").textContent =
-                data.total_products;
+        document.getElementById("totalProducts").textContent =
+            data.total_products;
 
-            document.getElementById("totalStock").textContent =
-                data.total_stock;
+        document.getElementById("totalStock").textContent =
+            data.total_stock;
 
-            document.getElementById("totalUnitsSold").textContent =
-                data.total_units_sold;
+        document.getElementById("totalUnitsSold").textContent =
+            data.total_units_sold;
 
-            document.getElementById("lowStockProducts").textContent =
-                data.low_stock_products;
-
-        }
-
-        catch (error) {
-
-            console.error(error);
-
-        }
+        document.getElementById("lowStockProducts").textContent =
+            data.low_stock_products;
 
     }
 
+    catch (error) {
 
-    /* =========================
-       PRODUCTS
-    ========================= */
+        console.error("Summary error:", error);
 
-    async function loadProducts() {
+    }
 
-        try {
+}
 
-            const response = await fetch("/api/products");
 
-            const products = await response.json();
+/* ============================================================
+   PRODUCTS
+============================================================ */
 
-            const table =
-                document.getElementById("productTable");
+async function loadProducts() {
 
-            table.innerHTML = "";
+    try {
 
-            products.forEach(product => {
+        const response = await fetch("/api/products");
 
-                const row = document.createElement("tr");
+        const products = await response.json();
 
-                const statusClass =
-                    product.status === "LOW STOCK"
-                    ? "low-stock"
-                    : "ok-stock";
+        const table =
+            document.getElementById("productTable");
 
-                row.innerHTML = `
+        table.innerHTML = "";
 
-                    <td>
-                        <strong>${product.product_name}</strong>
-                    </td>
+        products.forEach(product => {
 
-                    <td>
-                        ${product.category}
-                    </td>
+            const row =
+                document.createElement("tr");
 
-                    <td>
-                        ₹${Number(product.price).toLocaleString()}
-                    </td>
+            const statusClass =
+                product.status === "LOW STOCK"
+                ? "low-stock"
+                : "ok-stock";
 
-                    <td>
-                        ${product.units_sold}
-                    </td>
+            row.innerHTML = `
 
-                    <td>
-                        ${product.current_stock}
-                    </td>
+                <td>
+                    <strong>
+                        ${product.product_name}
+                    </strong>
+                </td>
 
-                    <td>
-                        ₹${Number(product.revenue).toLocaleString()}
-                    </td>
+                <td>
+                    ${product.category}
+                </td>
 
-                    <td class="${statusClass}">
-                        ${product.status}
-                    </td>
+                <td>
+                    ₹${Number(product.price).toLocaleString()}
+                </td>
+
+                <td>
+                    ${product.units_sold}
+                </td>
+
+                <td>
+                    ${product.current_stock}
+                </td>
+
+                <td>
+                    ₹${Number(product.revenue).toLocaleString()}
+                </td>
+
+                <td class="${statusClass}">
+                    ${product.status}
+                </td>
+
+            `;
+
+            table.appendChild(row);
+
+        });
+
+    }
+
+    catch (error) {
+
+        console.error("Products error:", error);
+
+        document.getElementById("productTable").innerHTML = `
+
+            <tr>
+
+                <td colspan="7">
+                    Unable to load products.
+                </td>
+
+            </tr>
+
+        `;
+
+    }
+
+}
+
+
+/* ============================================================
+   SMART INSIGHTS
+============================================================ */
+
+async function loadInsights() {
+
+    try {
+
+        const response =
+            await fetch("/api/insights");
+
+        const data =
+            await response.json();
+
+
+        /* STOCK OUT */
+
+        const stockOut =
+            document.getElementById("stockOutRisk");
+
+        stockOut.innerHTML = "";
+
+
+        if (!data.stock_out_risk ||
+            data.stock_out_risk.length === 0) {
+
+            stockOut.innerHTML = `
+                <div class="empty">
+                    No immediate stock-out risk.
+                </div>
+            `;
+
+        }
+
+        else {
+
+            data.stock_out_risk.forEach(item => {
+
+                stockOut.innerHTML += `
+
+                    <div class="insight-item danger">
+
+                        <div class="item-name">
+                            ${item.product_name}
+                        </div>
+
+                        Stock:
+                        ${item.current_stock}
+
+                        <br>
+
+                        Coverage:
+                        ${Number(item.stock_days).toFixed(1)}
+                        days
+
+                        <br>
+
+                        Daily sales:
+                        ${Number(item.avg_daily_sales).toFixed(2)}
+
+                        <br>
+
+                        Risk:
+                        <strong>
+                            ${item.risk}
+                        </strong>
+
+                    </div>
 
                 `;
-
-                table.appendChild(row);
 
             });
 
         }
 
-        catch (error) {
 
-            console.error(error);
+        /* RESTOCK */
 
-            document.getElementById("productTable").innerHTML =
-                `<tr>
-                    <td colspan="7">Unable to load products.</td>
-                </tr>`;
+        const restock =
+            document.getElementById("restockPriority");
+
+        restock.innerHTML = "";
+
+
+        if (!data.restock_priority ||
+            data.restock_priority.length === 0) {
+
+            restock.innerHTML = `
+                <div class="empty">
+                    No products require restocking.
+                </div>
+            `;
 
         }
 
-    }
+        else {
 
+            data.restock_priority.forEach(item => {
 
-    /* =========================
-       SMART INSIGHTS
-    ========================= */
+                restock.innerHTML += `
 
-    async function loadInsights() {
+                    <div class="insight-item warning">
 
-        try {
-
-            const response =
-                await fetch("/api/insights");
-
-            const data =
-                await response.json();
-
-
-            /* STOCK OUT */
-
-            const stockOut =
-                document.getElementById("stockOutRisk");
-
-            stockOut.innerHTML = "";
-
-            if (data.stock_out_risk.length === 0) {
-
-                stockOut.innerHTML =
-                    `<div class="empty">No immediate stock-out risk.</div>`;
-
-            }
-            else {
-
-                data.stock_out_risk.forEach(item => {
-
-                    stockOut.innerHTML += `
-
-                        <div class="insight-item danger">
-
-                            <div class="item-name">
-                                ${item.product_name}
-                            </div>
-
-                            Stock: ${item.current_stock}
-                            <br>
-
-                            Coverage: ${item.stock_days} days
-                            <br>
-
-                            Daily sales: ${item.avg_daily_sales}
-
+                        <div class="item-name">
+                            ${item.product_name}
                         </div>
 
-                    `;
+                        Current stock:
+                        ${item.current_stock}
 
-                });
+                        <br>
 
-            }
+                        Reorder level:
+                        ${item.reorder_level}
+
+                        <br>
+
+                        Suggested reorder:
+                        <strong>
+                            ${item.suggested_reorder}
+                        </strong>
+
+                        <br>
+
+                        Coverage:
+                        ${Number(item.stock_days).toFixed(1)}
+                        days
+
+                        <br>
+
+                        Risk:
+                        ${item.risk}
+
+                    </div>
+
+                `;
+
+            });
+
+        }
 
 
-            /* RESTOCK */
+        /* SLOW MOVING */
 
-            const restock =
-                document.getElementById("restockPriority");
+        const slow =
+            document.getElementById("slowMoving");
 
-            restock.innerHTML = "";
+        slow.innerHTML = "";
 
-            if (data.restock_priority.length === 0) {
 
-                restock.innerHTML =
-                    `<div class="empty">No products require restocking.</div>`;
+        if (!data.slow_moving ||
+            data.slow_moving.length === 0) {
 
-            }
-            else {
+            slow.innerHTML = `
+                <div class="empty">
+                    No slow-moving products.
+                </div>
+            `;
 
-                data.restock_priority.forEach(item => {
+        }
 
-                    restock.innerHTML += `
+        else {
 
-                        <div class="insight-item warning">
+            data.slow_moving.forEach(item => {
 
-                            <div class="item-name">
-                                ${item.product_name}
-                            </div>
+                slow.innerHTML += `
 
-                            Current stock:
-                            ${item.current_stock}
-                            <br>
+                    <div class="insight-item">
 
-                            Reorder level:
-                            ${item.reorder_level}
-                            <br>
-
-                            Suggested reorder:
-                            <strong>${item.suggested_reorder}</strong>
-
+                        <div class="item-name">
+                            ${item.product_name}
                         </div>
 
-                    `;
+                        Units sold:
+                        ${item.units_sold}
 
-                });
+                        <br>
 
-            }
+                        Current stock:
+                        ${item.current_stock}
+
+                        <br>
+
+                        Revenue:
+                        ₹${Number(item.revenue).toLocaleString()}
+
+                    </div>
+
+                `;
+
+            });
+
+        }
 
 
-            /* SLOW MOVING */
+        /* OVERSTOCK */
 
-            const slow =
-                document.getElementById("slowMoving");
+        const overstock =
+            document.getElementById("overstock");
 
-            slow.innerHTML = "";
+        overstock.innerHTML = "";
 
-            if (data.slow_moving.length === 0) {
 
-                slow.innerHTML =
-                    `<div class="empty">No slow-moving products.</div>`;
+        if (!data.overstock ||
+            data.overstock.length === 0) {
 
-            }
-            else {
+            overstock.innerHTML = `
+                <div class="empty">
+                    No major overstock detected.
+                </div>
+            `;
 
-                data.slow_moving.forEach(item => {
+        }
 
-                    slow.innerHTML += `
+        else {
 
-                        <div class="insight-item">
+            data.overstock.forEach(item => {
 
-                            <div class="item-name">
-                                ${item.product_name}
-                            </div>
+                overstock.innerHTML += `
 
-                            Units sold:
-                            ${item.units_sold}
-                            <br>
+                    <div class="insight-item info">
 
-                            Current stock:
-                            ${item.current_stock}
-                            <br>
-
-                            Revenue:
-                            ₹${Number(item.revenue).toLocaleString()}
-
+                        <div class="item-name">
+                            ${item.product_name}
                         </div>
 
-                    `;
+                        Current stock:
+                        ${item.current_stock}
 
-                });
+                        <br>
 
-            }
+                        Stock coverage:
+                        ${Number(item.stock_days).toFixed(1)}
+                        days
 
+                        <br>
 
-            /* OVERSTOCK */
+                        Units sold:
+                        ${item.units_sold}
 
-            const overstock =
-                document.getElementById("overstock");
+                    </div>
 
-            overstock.innerHTML = "";
+                `;
 
-            if (data.overstock.length === 0) {
+            });
 
-                overstock.innerHTML =
-                    `<div class="empty">No major overstock detected.</div>`;
-
-            }
-            else {
-
-                data.overstock.forEach(item => {
-
-                    overstock.innerHTML += `
-
-                        <div class="insight-item info">
-
-                            <div class="item-name">
-                                ${item.product_name}
-                            </div>
-
-                            Current stock:
-                            ${item.current_stock}
-                            <br>
-
-                            Stock coverage:
-                            ${item.stock_days} days
-                            <br>
-
-                            Units sold:
-                            ${item.units_sold}
-
-                        </div>
-
-                    `;
-
-                });
-
-            }
+        }
 
 
-            /* TOP SELLERS */
+        /* TOP SELLERS */
 
-            const topSellers =
-                document.getElementById("topSellers");
+        const topSellers =
+            document.getElementById("topSellers");
 
-            topSellers.innerHTML = "";
+        topSellers.innerHTML = "";
+
+
+        if (!data.top_sellers ||
+            data.top_sellers.length === 0) {
+
+            topSellers.innerHTML = `
+                <div class="empty">
+                    No sales data available.
+                </div>
+            `;
+
+        }
+
+        else {
 
             data.top_sellers.forEach((item, index) => {
 
@@ -876,6 +1364,7 @@
 
                         Units sold:
                         ${item.units_sold}
+
                         <br>
 
                         Revenue:
@@ -887,13 +1376,29 @@
 
             });
 
+        }
 
-            /* REVENUE LEADERS */
 
-            const revenueLeaders =
-                document.getElementById("revenueLeaders");
+        /* REVENUE LEADERS */
 
-            revenueLeaders.innerHTML = "";
+        const revenueLeaders =
+            document.getElementById("revenueLeaders");
+
+        revenueLeaders.innerHTML = "";
+
+
+        if (!data.revenue_leaders ||
+            data.revenue_leaders.length === 0) {
+
+            revenueLeaders.innerHTML = `
+                <div class="empty">
+                    No revenue data available.
+                </div>
+            `;
+
+        }
+
+        else {
 
             data.revenue_leaders.forEach((item, index) => {
 
@@ -924,151 +1429,549 @@
 
         }
 
-        catch (error) {
+    }
 
-            console.error(error);
+    catch (error) {
 
-            document.getElementById("stockOutRisk").innerHTML =
-                `<div class="empty">Unable to load insights.</div>`;
+        console.error("Insights error:", error);
 
-        }
+        document.getElementById("stockOutRisk").innerHTML =
+            `<div class="empty">
+                Unable to load insights.
+            </div>`;
 
     }
 
+}
 
-    /* =========================
-       AI QUESTION
-    ========================= */
 
-    function setQuestion(question) {
+/* ============================================================
+   BUSINESS HEALTH
+============================================================ */
 
-        document.getElementById("questionInput").value =
-            question;
+async function loadHealth() {
 
-        askRetailIQ();
+    try {
+
+        const response =
+            await fetch("/api/health");
+
+        const data =
+            await response.json();
+
+
+        document.getElementById("healthScore").textContent =
+            data.score;
+
+
+        document.getElementById("healthLabel").textContent =
+            data.status;
+
+
+        document.getElementById("healthLowStock").textContent =
+            data.low_stock;
+
+
+        document.getElementById("healthCritical").textContent =
+            data.critical;
+
+
+        document.getElementById("healthSlow").textContent =
+            data.slow_moving;
 
     }
 
+    catch (error) {
 
-    function handleEnter(event) {
+        console.error("Health error:", error);
 
-        if (event.key === "Enter") {
-
-            askRetailIQ();
-
-        }
+        document.getElementById("healthLabel").textContent =
+            "Unable to load";
 
     }
 
-
-    async function askRetailIQ() {
-
-        const input =
-            document.getElementById("questionInput");
-
-        const responseBox =
-            document.getElementById("aiResponse");
-
-        const question =
-            input.value.trim();
+}
 
 
-        if (!question) {
+/* ============================================================
+   MANAGER ACTION CENTER
+============================================================ */
 
-            responseBox.innerHTML =
-                "Please enter a question.";
+async function loadActions() {
+
+    try {
+
+        const response =
+            await fetch("/api/actions");
+
+        const actions =
+            await response.json();
+
+
+        const box =
+            document.getElementById("actionCenter");
+
+        box.innerHTML = "";
+
+
+        if (!actions || actions.length === 0) {
+
+            box.innerHTML = `
+                <div class="empty">
+                    No immediate actions required.
+                </div>
+            `;
 
             return;
 
         }
 
 
+        actions.forEach(action => {
+
+            let priorityClass = "review";
+
+
+            if (action.priority === "URGENT") {
+
+                priorityClass = "urgent";
+
+            }
+
+            else if (action.priority === "HIGH") {
+
+                priorityClass = "high";
+
+            }
+
+
+            box.innerHTML += `
+
+                <div class="action-item ${priorityClass}">
+
+                    <div class="action-priority">
+                        ${action.priority}
+                    </div>
+
+                    <div class="action-title">
+                        ${action.title}
+                    </div>
+
+                    <div class="action-reason">
+                        ${action.reason}
+                    </div>
+
+                    <div class="action-do">
+                        Action: ${action.action}
+                    </div>
+
+                </div>
+
+            `;
+
+        });
+
+    }
+
+    catch (error) {
+
+        console.error("Actions error:", error);
+
+        document.getElementById("actionCenter").innerHTML =
+            `<div class="empty">
+                Unable to load actions.
+            </div>`;
+
+    }
+
+}
+
+
+/* ============================================================
+   SALES TREND
+============================================================ */
+
+async function loadTrends() {
+
+    try {
+
+        const response =
+            await fetch("/api/trend");
+
+        const data =
+            await response.json();
+
+
+        const box =
+            document.getElementById("salesTrends");
+
+        box.innerHTML = "";
+
+
+        if (!data ||
+            !data.daily_sales ||
+            data.daily_sales.length === 0) {
+
+            box.innerHTML = `
+                <div class="empty">
+                    Not enough data for trend analysis.
+                </div>
+            `;
+
+            return;
+
+        }
+
+
+        let trendClass = "trend-stable";
+        let icon = "➡️";
+
+
+        if (data.direction === "RISING") {
+
+            trendClass = "trend-rising";
+            icon = "📈";
+
+        }
+
+        else if (data.direction === "FALLING") {
+
+            trendClass = "trend-falling";
+            icon = "📉";
+
+        }
+
+
+        box.innerHTML += `
+
+            <div class="trend-summary">
+
+                <div class="trend-direction ${trendClass}">
+
+                    ${icon}
+                    ${data.direction}
+
+                </div>
+
+                <div>
+
+                    Change:
+                    <strong>
+                        ${Number(data.change_percent).toFixed(1)}%
+                    </strong>
+
+                </div>
+
+            </div>
+
+        `;
+
+
+        box.innerHTML += `
+
+            <div class="daily-sales">
+
+                <strong>
+                    Recent Daily Sales
+                </strong>
+
+        `;
+
+
+        data.daily_sales.slice(-10).forEach(item => {
+
+            box.innerHTML += `
+
+                <div class="daily-row">
+
+                    <span>
+                        ${item.date}
+                    </span>
+
+                    <strong>
+                        ${item.units_sold} units
+                    </strong>
+
+                </div>
+
+            `;
+
+        });
+
+
+        box.innerHTML += `</div>`;
+
+    }
+
+    catch (error) {
+
+        console.error("Trend error:", error);
+
+        document.getElementById("salesTrends").innerHTML =
+            `<div class="empty">
+                Unable to load trends.
+            </div>`;
+
+    }
+
+}
+
+
+/* ============================================================
+   SALES ANOMALIES
+============================================================ */
+
+async function loadAnomalies() {
+
+    try {
+
+        const response =
+            await fetch("/api/anomalies");
+
+        const data =
+            await response.json();
+
+
+        const box =
+            document.getElementById("salesAnomalies");
+
+        box.innerHTML = "";
+
+
+        if (!data || data.length === 0) {
+
+            box.innerHTML = `
+                <div class="empty">
+                    No unusual sales patterns detected.
+                </div>
+            `;
+
+            return;
+
+        }
+
+
+        data.slice(0, 6).forEach(item => {
+
+            const type =
+                item.type || "ANOMALY";
+
+
+            box.innerHTML += `
+
+                <div class="anomaly-item">
+
+                    <div class="anomaly-name">
+
+                        🚨 Sales anomaly detected
+
+                    </div>
+
+                    <div class="anomaly-type">
+
+                        ${type}
+
+                    </div>
+
+                    <div class="anomaly-details">
+
+                        Date:
+                        ${item.date}
+
+                        <br>
+
+                        Sales:
+                        ${item.units_sold}
+                        units
+
+                        <br>
+
+                        Z-score:
+                        ${Number(item.z_score).toFixed(2)}
+
+                    </div>
+
+                </div>
+
+            `;
+
+        });
+
+    }
+
+    catch (error) {
+
+        console.error("Anomaly error:", error);
+
+        document.getElementById("salesAnomalies").innerHTML =
+            `<div class="empty">
+                Unable to load anomalies.
+            </div>`;
+
+    }
+
+}
+
+
+/* ============================================================
+   AI QUESTION
+============================================================ */
+
+function setQuestion(question) {
+
+    document.getElementById("questionInput").value =
+        question;
+
+    askRetailIQ();
+
+}
+
+
+function handleEnter(event) {
+
+    if (event.key === "Enter") {
+
+        askRetailIQ();
+
+    }
+
+}
+
+
+async function askRetailIQ() {
+
+    const input =
+        document.getElementById("questionInput");
+
+
+    const responseBox =
+        document.getElementById("aiResponse");
+
+
+    const question =
+        input.value.trim();
+
+
+    if (!question) {
+
         responseBox.innerHTML =
-            "🤖 RetailIQ is analyzing your store data...";
+            "Please enter a question.";
+
+        return;
+
+    }
 
 
-        try {
+    responseBox.innerHTML =
+        "🤖 RetailIQ is analyzing your store data...";
 
-            const response =
-                await fetch("/api/ask", {
 
+    try {
+
+        const response =
+            await fetch(
+                "/api/ask",
+                {
                     method: "POST",
 
                     headers: {
-                        "Content-Type": "application/json"
+                        "Content-Type":
+                            "application/json"
                     },
 
                     body: JSON.stringify({
                         question: question
                     })
-
-                });
-
-
-            const data =
-                await response.json();
+                }
+            );
 
 
-            if (data.answer) {
+        const data =
+            await response.json();
 
-                let answer = data.answer;
 
-                answer = answer.replace(/###\s*/g, "");
+        if (data.answer) {
 
-                answer =
-                    answer.replace(
-                        /\*\*(.*?)\*\*/g,
-                        "<strong>$1</strong>"
-                    );
+            let answer =
+                data.answer;
 
-                answer =
-                    answer.replace(
-                        /^\s*\\?[*-]\s*/gm,
-                        "• "
-                    );
 
-                answer =
-                    answer.replace(
-                        /\n/g,
-                        "<br>"
-                    );
+            /* Clean Markdown */
 
-                responseBox.innerHTML =
-                    answer;
+            answer =
+                answer.replace(
+                    /###\s*/g,
+                    ""
+                );
 
-            }
-            else {
 
-                responseBox.innerHTML =
-                    "❌ Gemini could not process the request.";
+            answer =
+                answer.replace(
+                    /\*\*(.*?)\*\*/g,
+                    "<strong>$1</strong>"
+                );
 
-            }
+
+            answer =
+                answer.replace(
+                    /^\s*[\*-]\s*/gm,
+                    "• "
+                );
+
+
+            answer =
+                answer.replace(
+                    /\n/g,
+                    "<br>"
+                );
+
+
+            responseBox.innerHTML =
+                answer;
 
         }
 
-        catch (error) {
-
-            console.error(error);
+        else {
 
             responseBox.innerHTML =
-                "❌ Unable to connect to the AI service.";
+                "❌ RetailIQ could not process the request.";
 
         }
 
     }
 
+    catch (error) {
 
-    /* =========================
-       INITIAL LOAD
-    ========================= */
+        console.error("AI error:", error);
 
-    loadSummary();
+        responseBox.innerHTML =
+            "❌ Unable to connect to the AI service.";
 
-    loadProducts();
+    }
 
-    loadInsights();
+}
+
+
+/* ============================================================
+   INITIAL LOAD
+============================================================ */
+
+loadSummary();
+
+loadProducts();
+
+loadInsights();
+
+loadHealth();
+
+loadActions();
+
+loadTrends();
+
+loadAnomalies();
 
 </script>
 
 </body>
+
 </html>
