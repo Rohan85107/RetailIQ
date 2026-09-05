@@ -1,205 +1,198 @@
-from flask import Flask, jsonify, render_template, request
+from flask import Flask, jsonify, request, render_template
 import pandas as pd
 import os
 from google import genai
 
 app = Flask(__name__)
 
-# =========================
-# GEMINI API SETUP
-# =========================
+# ============================================================
+# CONFIGURATION
+# ============================================================
 
-API_KEY = os.getenv("GEMINI_API_KEY")
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DATA_DIR = os.path.join(BASE_DIR, "data")
 
-if not API_KEY:
-    print("WARNING: GEMINI_API_KEY is not set.")
+PRODUCTS_FILE = os.path.join(DATA_DIR, "products.csv")
+SALES_FILE = os.path.join(DATA_DIR, "sales.csv")
+INVENTORY_FILE = os.path.join(DATA_DIR, "inventory.csv")
+
+# Gemini client
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
+
+client = None
+
+if GEMINI_API_KEY:
+    try:
+        client = genai.Client(api_key=GEMINI_API_KEY)
+        print("Gemini API: Connected")
+    except Exception as e:
+        print("Gemini connection error:", e)
 else:
-    print("Gemini API Key: FOUND")
-
-client = genai.Client(api_key=API_KEY) if API_KEY else None
+    print("WARNING: GEMINI_API_KEY not found")
 
 
-# =========================
-# DATA FILES
-# =========================
-
-PRODUCTS_FILE = "data/products.csv"
-SALES_FILE = "data/sales.csv"
-INVENTORY_FILE = "data/inventory.csv"
-
-
-# =========================
+# ============================================================
 # LOAD DATA
-# =========================
+# ============================================================
 
-products = pd.read_csv(PRODUCTS_FILE)
-sales = pd.read_csv(SALES_FILE)
-inventory = pd.read_csv(INVENTORY_FILE)
+def load_data():
 
-products.columns = products.columns.str.strip().str.lower()
-sales.columns = sales.columns.str.strip().str.lower()
-inventory.columns = inventory.columns.str.strip().str.lower()
+    products = pd.read_csv(PRODUCTS_FILE)
+    sales = pd.read_csv(SALES_FILE)
+    inventory = pd.read_csv(INVENTORY_FILE)
 
+    # Support both quantity and units_sold
+    if "quantity" in sales.columns:
+        sales["units_sold"] = pd.to_numeric(
+            sales["quantity"], errors="coerce"
+        ).fillna(0)
+    elif "units_sold" in sales.columns:
+        sales["units_sold"] = pd.to_numeric(
+            sales["units_sold"], errors="coerce"
+        ).fillna(0)
+    else:
+        sales["units_sold"] = 0
 
-# =========================
-# HANDLE SALES COLUMN
-# =========================
-
-if "quantity" in sales.columns:
-    sales["quantity"] = pd.to_numeric(
-        sales["quantity"], errors="coerce"
+    # Numeric conversions
+    products["price"] = pd.to_numeric(
+        products["price"], errors="coerce"
     ).fillna(0)
 
-    sales["units_sold"] = sales["quantity"]
-
-elif "units_sold" in sales.columns:
-    sales["units_sold"] = pd.to_numeric(
-        sales["units_sold"], errors="coerce"
+    inventory["current_stock"] = pd.to_numeric(
+        inventory["current_stock"], errors="coerce"
     ).fillna(0)
 
-else:
-    raise ValueError(
-        "sales.csv must contain either 'quantity' or 'units_sold' column."
-    )
+    inventory["reorder_level"] = pd.to_numeric(
+        inventory["reorder_level"], errors="coerce"
+    ).fillna(0)
+
+    # Date conversion
+    if "date" in sales.columns:
+        sales["date"] = pd.to_datetime(
+            sales["date"], errors="coerce"
+        )
+
+    return products, sales, inventory
 
 
-# =========================
+# ============================================================
 # PRODUCT ANALYSIS
-# =========================
+# ============================================================
 
 def get_product_analysis():
 
+    products, sales, inventory = load_data()
+
+    # Sales summary by product
     sales_summary = (
-        sales.groupby("product_id", as_index=False)
-        .agg(units_sold=("units_sold", "sum"))
+        sales.groupby("product_id")["units_sold"]
+        .sum()
+        .reset_index()
     )
 
-    analysis = sales_summary.merge(
-        products,
+    sales_summary.rename(
+        columns={"units_sold": "units_sold"},
+        inplace=True
+    )
+
+    # Merge all data
+    df = products.merge(
+        sales_summary,
         on="product_id",
         how="left"
     )
 
-    analysis = analysis.merge(
+    df = df.merge(
         inventory,
         on="product_id",
         how="left"
     )
 
-    analysis["units_sold"] = pd.to_numeric(
-        analysis["units_sold"],
-        errors="coerce"
-    ).fillna(0)
-
-    analysis["price"] = pd.to_numeric(
-        analysis["price"],
-        errors="coerce"
-    ).fillna(0)
-
-    analysis["current_stock"] = pd.to_numeric(
-        analysis["current_stock"],
-        errors="coerce"
-    ).fillna(0)
-
-    analysis["reorder_level"] = pd.to_numeric(
-        analysis["reorder_level"],
-        errors="coerce"
-    ).fillna(0)
+    df["units_sold"] = df["units_sold"].fillna(0)
+    df["current_stock"] = df["current_stock"].fillna(0)
+    df["reorder_level"] = df["reorder_level"].fillna(0)
 
     # Revenue
-    analysis["revenue"] = (
-        analysis["units_sold"] * analysis["price"]
+    df["revenue"] = df["units_sold"] * df["price"]
+
+    # --------------------------------------------------------
+    # DATE RANGE
+    # --------------------------------------------------------
+
+    if not sales.empty and sales["date"].notna().any():
+
+        min_date = sales["date"].min()
+        max_date = sales["date"].max()
+
+        total_days = (max_date - min_date).days + 1
+
+        if total_days <= 0:
+            total_days = 1
+
+    else:
+        total_days = 1
+
+    # --------------------------------------------------------
+    # AVERAGE DAILY SALES
+    # --------------------------------------------------------
+
+    df["avg_daily_sales"] = (
+        df["units_sold"] / total_days
     )
 
-    # Stock status
-    analysis["status"] = analysis.apply(
+    # --------------------------------------------------------
+    # STOCK COVERAGE
+    # --------------------------------------------------------
+
+    df["stock_days"] = df.apply(
+        lambda row:
+        row["current_stock"] / row["avg_daily_sales"]
+        if row["avg_daily_sales"] > 0
+        else 9999,
+        axis=1
+    )
+
+    # --------------------------------------------------------
+    # STOCK STATUS
+    # --------------------------------------------------------
+
+    df["status"] = df.apply(
         lambda row:
         "LOW STOCK"
-        if row["current_stock"] <= row["reorder_level"]
+        if row["current_stock"] < row["reorder_level"]
         else "OK",
         axis=1
     )
 
-    # =========================
-    # AVERAGE DAILY SALES
-    # =========================
-
-    analysis["avg_daily_sales"] = 0.0
-
-    if "date" in sales.columns:
-
-        sales["date"] = pd.to_datetime(
-            sales["date"],
-            errors="coerce"
-        )
-
-        valid_dates = sales["date"].dropna()
-
-        if len(valid_dates) > 0:
-
-            number_of_days = (
-                valid_dates.max() - valid_dates.min()
-            ).days + 1
-
-            if number_of_days > 0:
-
-                daily_sales = (
-                    sales.groupby("product_id")["units_sold"].sum()
-                    / number_of_days
-                )
-
-                analysis["avg_daily_sales"] = (
-                    analysis["product_id"]
-                    .map(daily_sales)
-                    .fillna(0)
-                )
-
-    # =========================
-    # STOCK COVERAGE
-    # =========================
-
-    analysis["stock_days"] = analysis.apply(
-        lambda row:
-        round(
-            row["current_stock"] /
-            row["avg_daily_sales"],
-            1
-        )
-        if row["avg_daily_sales"] > 0
-        else 999,
-        axis=1
-    )
-
-    # =========================
-    # RISK
-    # =========================
+    # --------------------------------------------------------
+    # RISK LEVEL
+    # --------------------------------------------------------
 
     def calculate_risk(row):
 
-        if row["current_stock"] <= row["reorder_level"]:
+        if row["current_stock"] < row["reorder_level"]:
             return "HIGH"
 
-        elif row["stock_days"] <= 7:
+        if row["stock_days"] <= 14:
             return "MEDIUM"
 
-        else:
-            return "LOW"
+        return "LOW"
 
-    analysis["risk"] = analysis.apply(
+    df["risk"] = df.apply(
         calculate_risk,
         axis=1
     )
 
-    return analysis
+    return df
 
 
-# =========================
+# ============================================================
 # STORE SUMMARY
-# =========================
+# ============================================================
 
 def get_store_summary():
 
-    analysis = get_product_analysis()
+    products, sales, inventory = load_data()
 
     total_products = len(products)
 
@@ -214,13 +207,39 @@ def get_store_summary():
     low_stock_products = int(
         (
             inventory["current_stock"]
-            <= inventory["reorder_level"]
+            < inventory["reorder_level"]
         ).sum()
     )
 
-    total_revenue = float(
-        analysis["revenue"].sum()
-    )
+    total_revenue = 0
+
+    if not products.empty and not sales.empty:
+
+        sales_summary = (
+            sales.groupby("product_id")["units_sold"]
+            .sum()
+            .reset_index()
+        )
+
+        merged = products.merge(
+            sales_summary,
+            on="product_id",
+            how="left"
+        )
+
+        merged["units_sold"] = (
+            merged["units_sold"]
+            .fillna(0)
+        )
+
+        merged["revenue"] = (
+            merged["units_sold"]
+            * merged["price"]
+        )
+
+        total_revenue = float(
+            merged["revenue"].sum()
+        )
 
     return {
         "total_products": total_products,
@@ -231,390 +250,490 @@ def get_store_summary():
     }
 
 
-# =========================
-# BUSINESS INSIGHTS
-# =========================
+# ============================================================
+# ADVANCED INTELLIGENCE
+# ============================================================
 
-def get_business_insights():
+def get_advanced_insights():
 
     df = get_product_analysis()
 
-    insights = {}
+    insights = {
+        "stock_out_risk": [],
+        "slow_moving": [],
+        "overstock": [],
+        "top_sellers": [],
+        "revenue_leaders": [],
+        "restock_priority": []
+    }
 
-    # Best sellers
-    best_sellers = (
-        df.sort_values(
-            "units_sold",
-            ascending=False
-        )
-        .head(5)
-    )
+    # --------------------------------------------------------
+    # 1. STOCK-OUT RISK
+    # --------------------------------------------------------
 
-    insights["best_sellers"] = (
-        best_sellers[
-            [
-                "product_name",
-                "units_sold",
-                "revenue"
-            ]
-        ]
-        .to_dict(orient="records")
-    )
-
-    # Highest revenue
-    highest_revenue = (
-        df.sort_values(
-            "revenue",
-            ascending=False
-        )
-        .head(5)
-    )
-
-    insights["highest_revenue"] = (
-        highest_revenue[
-            [
-                "product_name",
-                "units_sold",
-                "revenue"
-            ]
-        ]
-        .to_dict(orient="records")
-    )
-
-    # Low stock
-    low_stock = df[
-        df["current_stock"] <= df["reorder_level"]
+    risk_df = df[
+        df["stock_days"] <= 14
     ].copy()
 
-    insights["low_stock"] = (
-        low_stock[
-            [
-                "product_name",
-                "current_stock",
-                "reorder_level",
-                "units_sold",
-                "stock_days",
-                "risk"
-            ]
-        ]
-        .to_dict(orient="records")
+    risk_df = risk_df.sort_values(
+        by="stock_days"
     )
 
-    # Slow moving
-    slow_moving = (
-        df[df["units_sold"] <= 5]
-        .sort_values("units_sold")
-    )
+    for _, row in risk_df.iterrows():
 
-    insights["slow_moving"] = (
-        slow_moving[
-            [
-                "product_name",
-                "units_sold",
-                "current_stock"
-            ]
-        ]
-        .to_dict(orient="records")
-    )
+        insights["stock_out_risk"].append({
+            "product_id": row["product_id"],
+            "product_name": row["product_name"],
+            "current_stock": int(row["current_stock"]),
+            "avg_daily_sales": round(
+                float(row["avg_daily_sales"]), 2
+            ),
+            "stock_days": round(
+                float(row["stock_days"]), 1
+            ),
+            "risk": row["risk"]
+        })
 
-    # Overstock
-    overstock = df[
-        (df["current_stock"] > df["reorder_level"] * 3)
-        &
-        (df["units_sold"] <= 10)
-    ]
+    # --------------------------------------------------------
+    # 2. SLOW MOVING PRODUCTS
+    # --------------------------------------------------------
 
-    insights["overstock"] = (
-        overstock[
-            [
-                "product_name",
-                "current_stock",
-                "reorder_level",
-                "units_sold"
-            ]
-        ]
-        .to_dict(orient="records")
-    )
-
-    # Restock priority
-    restock = df[
-        df["current_stock"] <= df["reorder_level"]
+    slow_df = df[
+        df["units_sold"] <= 10
     ].copy()
 
-    restock["priority_score"] = (
-        restock["units_sold"]
-        /
-        restock["current_stock"].replace(0, 1)
+    slow_df = slow_df.sort_values(
+        by="units_sold"
     )
 
-    restock = (
-        restock
-        .sort_values(
-            "priority_score",
-            ascending=False
+    for _, row in slow_df.iterrows():
+
+        insights["slow_moving"].append({
+            "product_id": row["product_id"],
+            "product_name": row["product_name"],
+            "units_sold": int(row["units_sold"]),
+            "current_stock": int(row["current_stock"]),
+            "revenue": round(
+                float(row["revenue"]), 2
+            )
+        })
+
+    # --------------------------------------------------------
+    # 3. OVERSTOCK
+    # --------------------------------------------------------
+
+    overstock_df = df[
+        (df["stock_days"] > 90)
+        & (df["current_stock"] > df["reorder_level"])
+    ].copy()
+
+    overstock_df = overstock_df.sort_values(
+        by="stock_days",
+        ascending=False
+    )
+
+    for _, row in overstock_df.iterrows():
+
+        insights["overstock"].append({
+            "product_id": row["product_id"],
+            "product_name": row["product_name"],
+            "current_stock": int(row["current_stock"]),
+            "units_sold": int(row["units_sold"]),
+            "stock_days": round(
+                float(row["stock_days"]), 1
+            )
+        })
+
+    # --------------------------------------------------------
+    # 4. TOP SELLERS
+    # --------------------------------------------------------
+
+    top_sellers_df = df.sort_values(
+        by="units_sold",
+        ascending=False
+    ).head(5)
+
+    for _, row in top_sellers_df.iterrows():
+
+        insights["top_sellers"].append({
+            "product_id": row["product_id"],
+            "product_name": row["product_name"],
+            "units_sold": int(row["units_sold"]),
+            "revenue": round(
+                float(row["revenue"]), 2
+            )
+        })
+
+    # --------------------------------------------------------
+    # 5. REVENUE LEADERS
+    # --------------------------------------------------------
+
+    revenue_df = df.sort_values(
+        by="revenue",
+        ascending=False
+    ).head(5)
+
+    for _, row in revenue_df.iterrows():
+
+        insights["revenue_leaders"].append({
+            "product_id": row["product_id"],
+            "product_name": row["product_name"],
+            "revenue": round(
+                float(row["revenue"]), 2
+            ),
+            "units_sold": int(row["units_sold"])
+        })
+
+    # --------------------------------------------------------
+    # 6. RESTOCK PRIORITY
+    # --------------------------------------------------------
+
+    restock_df = df[
+        df["current_stock"] < df["reorder_level"]
+    ].copy()
+
+    # Highest sales first
+    restock_df = restock_df.sort_values(
+        by=["units_sold", "stock_days"],
+        ascending=[False, True]
+    )
+
+    for _, row in restock_df.iterrows():
+
+        suggested_reorder = max(
+            int(row["reorder_level"] * 2)
+            - int(row["current_stock"]),
+            0
         )
-        .head(5)
-    )
 
-    insights["restock_priority"] = (
-        restock[
-            [
-                "product_name",
-                "current_stock",
-                "reorder_level",
-                "units_sold",
-                "stock_days",
-                "priority_score"
-            ]
-        ]
-        .to_dict(orient="records")
-    )
-
-    insights["total_revenue"] = float(
-        df["revenue"].sum()
-    )
+        insights["restock_priority"].append({
+            "product_id": row["product_id"],
+            "product_name": row["product_name"],
+            "current_stock": int(row["current_stock"]),
+            "reorder_level": int(row["reorder_level"]),
+            "units_sold": int(row["units_sold"]),
+            "stock_days": round(
+                float(row["stock_days"]), 1
+            ),
+            "suggested_reorder": suggested_reorder
+        })
 
     return insights
 
 
-# =========================
+# ============================================================
 # HOME PAGE
-# =========================
+# ============================================================
 
 @app.route("/")
 def home():
-    return render_template("index.html")
+
+    return render_template(
+        "index.html"
+    )
 
 
-# =========================
+# ============================================================
 # SUMMARY API
-# =========================
+# ============================================================
 
 @app.route("/api/summary")
-def summary():
+def api_summary():
 
     try:
 
-        return jsonify(
-            get_store_summary()
-        )
+        summary = get_store_summary()
+
+        return jsonify(summary)
 
     except Exception as e:
-
-        print("Summary Error:", repr(e))
 
         return jsonify({
             "error": str(e)
         }), 500
 
 
-# =========================
+# ============================================================
 # PRODUCTS API
-# =========================
+# ============================================================
 
 @app.route("/api/products")
-def product_list():
+def api_products():
 
     try:
 
         df = get_product_analysis()
 
-        records = df[
-            [
-                "product_id",
-                "product_name",
-                "category",
-                "price",
-                "units_sold",
-                "current_stock",
-                "revenue",
-                "status",
-                "avg_daily_sales",
-                "stock_days",
-                "risk"
-            ]
-        ].to_dict(orient="records")
+        products = []
 
-        return jsonify(records)
+        for _, row in df.iterrows():
+
+            products.append({
+
+                "product_id":
+                    row["product_id"],
+
+                "product_name":
+                    row["product_name"],
+
+                "category":
+                    row["category"],
+
+                "price":
+                    float(row["price"]),
+
+                "units_sold":
+                    int(row["units_sold"]),
+
+                "current_stock":
+                    int(row["current_stock"]),
+
+                "reorder_level":
+                    int(row["reorder_level"]),
+
+                "revenue":
+                    float(row["revenue"]),
+
+                "avg_daily_sales":
+                    round(
+                        float(row["avg_daily_sales"]),
+                        2
+                    ),
+
+                "stock_days":
+                    round(
+                        float(row["stock_days"]),
+                        1
+                    ),
+
+                "risk":
+                    row["risk"],
+
+                "status":
+                    row["status"]
+            })
+
+        return jsonify(products)
 
     except Exception as e:
-
-        print("Products Error:", repr(e))
 
         return jsonify({
             "error": str(e)
         }), 500
 
 
-# =========================
-# INSIGHTS API
-# =========================
+# ============================================================
+# ADVANCED INSIGHTS API
+# ============================================================
 
 @app.route("/api/insights")
-def insights():
+def api_insights():
 
     try:
 
-        return jsonify(
-            get_business_insights()
-        )
+        insights = get_advanced_insights()
+
+        return jsonify(insights)
 
     except Exception as e:
-
-        print("Insights Error:", repr(e))
 
         return jsonify({
             "error": str(e)
         }), 500
 
 
-# =========================
-# AI ASK API
-# =========================
+# ============================================================
+# AI QUESTION API
+# ============================================================
 
 @app.route("/api/ask", methods=["POST"])
-def ask_ai():
-
-    data = request.get_json() or {}
-
-    question = data.get(
-        "question",
-        ""
-    ).strip()
-
-    if not question:
-
-        return jsonify({
-            "answer": "Please enter a question."
-        }), 400
-
-    if client is None:
-
-        return jsonify({
-            "answer":
-            "Gemini API key is not configured. "
-            "Please set GEMINI_API_KEY."
-        }), 500
+def api_ask():
 
     try:
 
-        analysis = get_product_analysis()
+        data = request.get_json()
 
-        insights = get_business_insights()
+        question = data.get(
+            "question",
+            ""
+        ).strip()
 
-        store_data = analysis.to_string(
-            index=False
-        )
+        if not question:
 
-        insights_data = str(insights)
+            return jsonify({
+                "answer":
+                    "Please enter a question."
+            })
+
+        # ----------------------------------------------------
+        # Check Gemini connection
+        # ----------------------------------------------------
+
+        if client is None:
+
+            return jsonify({
+                "answer":
+                    "Gemini API is not connected. "
+                    "Please check GEMINI_API_KEY."
+            })
+
+        # ----------------------------------------------------
+        # Get actual store data
+        # ----------------------------------------------------
+
+        df = get_product_analysis()
+
+        summary = get_store_summary()
+
+        insights = get_advanced_insights()
+
+        # ----------------------------------------------------
+        # Convert data to compact text
+        # ----------------------------------------------------
+
+        product_records = []
+
+        for _, row in df.iterrows():
+
+            product_records.append({
+
+                "product_id":
+                    row["product_id"],
+
+                "product_name":
+                    row["product_name"],
+
+                "category":
+                    row["category"],
+
+                "price":
+                    float(row["price"]),
+
+                "units_sold":
+                    int(row["units_sold"]),
+
+                "current_stock":
+                    int(row["current_stock"]),
+
+                "reorder_level":
+                    int(row["reorder_level"]),
+
+                "revenue":
+                    float(row["revenue"]),
+
+                "avg_daily_sales":
+                    round(
+                        float(row["avg_daily_sales"]),
+                        2
+                    ),
+
+                "stock_days":
+                    round(
+                        float(row["stock_days"]),
+                        1
+                    ),
+
+                "risk":
+                    row["risk"],
+
+                "status":
+                    row["status"]
+            })
+
+        # ----------------------------------------------------
+        # AI PROMPT
+        # ----------------------------------------------------
 
         prompt = f"""
 You are RetailIQ, an AI Sales and Inventory Copilot
-for a small retail store.
+for a small retail business.
 
-Your job is to answer the manager's question using ONLY
-the store data and calculated business insights provided
-below.
+IMPORTANT RULES:
 
-STRICT RULES:
+1. Use ONLY the provided store data.
+2. NEVER invent numbers.
+3. NEVER create future sales predictions unless the data
+   explicitly supports them.
+4. If the question cannot be answered from the data,
+   clearly say:
+   "Insufficient data to answer this question."
+5. Every important numerical claim must come from the
+   provided data.
+6. Prefer concise, useful answers for a store manager.
+7. Give practical recommendations only when supported
+   by the data.
+8. Clearly distinguish facts from recommendations.
+9. Do not pretend that a recommendation is historical fact.
 
-1. NEVER invent numbers.
-2. NEVER invent products.
-3. Use ONLY the provided store data.
-4. Every numerical claim must come from the data.
-5. If the available data cannot answer the question, say:
-"Insufficient data to answer this question."
-6. Do not pretend to know information that is not provided.
-7. Give practical recommendations when appropriate.
-8. Clearly mention the evidence behind your answer.
-9. Keep the answer simple for a store manager.
-10. Use ₹ for revenue.
-11. Do not use unnecessary technical language.
-12. Do not claim that an item is out of stock unless
-the data shows current_stock = 0.
-13. For restocking, prioritize products with low stock,
-high sales and fewer stock coverage days.
-14. Stock coverage is:
-current stock / average daily sales.
-15. If the question asks for information that does not
-exist in the provided data, clearly say:
-Insufficient data to answer this question.
+STORE SUMMARY:
 
-STORE DATA:
+{summary}
 
-{store_data}
+PRODUCT DATA:
 
-CALCULATED BUSINESS INSIGHTS:
+{product_records}
 
-{insights_data}
+ADVANCED INSIGHTS:
+
+{insights}
 
 MANAGER QUESTION:
 
 {question}
 
-ANSWER FORMAT:
+Answer the manager's question.
 
-Give a clear direct answer.
+Use a clear structure when useful:
 
-Key Evidence:
-- Mention actual product names and numbers.
+### Answer
+### Evidence
+### Recommendation
 
-Recommendation:
-- Give a practical action when appropriate.
-
-If there is not enough information, clearly say:
-Insufficient data to answer this question.
+Do not use information outside the provided data.
 """
 
-        interaction = client.interactions.create(
+        # ----------------------------------------------------
+        # GEMINI INTERACTIONS API
+        # ----------------------------------------------------
+
+        response = client.interactions.create(
             model="gemini-3.6-flash",
             input=prompt
         )
 
-        answer = interaction.output_text
+        answer = response.output_text
 
         return jsonify({
-            "answer": answer,
-            "evidence": [
-                "data/products.csv",
-                "data/sales.csv",
-                "data/inventory.csv"
-            ]
+            "answer": answer
         })
 
     except Exception as e:
 
-        print("Gemini Error:", repr(e))
+        print(
+            "AI ERROR:",
+            repr(e)
+        )
 
         return jsonify({
             "answer":
-            "Gemini could not process the request. "
-            "Please check the API connection.",
+                "Gemini could not process the request.\n\n"
+                "Please check the API connection.",
             "error": str(e)
         }), 500
 
 
-# =========================
-# START SERVER
-# =========================
+# ============================================================
+# RUN APPLICATION
+# ============================================================
 
 if __name__ == "__main__":
 
-    print("=" * 55)
+    print("=" * 60)
     print("RetailIQ - AI Sales & Inventory Copilot")
-    print("=" * 55)
+    print("=" * 60)
 
-    print("Products:", len(products))
-    print("Sales Records:", len(sales))
-    print("Inventory Records:", len(inventory))
-
-    print(
-        "Gemini API Key:",
-        "FOUND" if API_KEY else "NOT FOUND"
-    )
-
-    print("=" * 55)
-    print("Starting server...")
+    print("Server starting...")
+    print("Open: http://localhost:8000")
 
     app.run(
         host="0.0.0.0",

@@ -14,181 +14,236 @@
         body {
             margin: 0;
             font-family: Arial, Helvetica, sans-serif;
-            background: #f5f7fb;
-            color: #111827;
+            background: #f4f7fb;
+            color: #1f2937;
         }
 
         .container {
             width: 92%;
-            max-width: 1200px;
-            margin: 30px auto;
+            max-width: 1250px;
+            margin: auto;
         }
 
-        /* Header */
-        .header {
-            background: white;
-            padding: 25px;
-            border-radius: 16px;
-            margin-bottom: 20px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+        header {
+            background: #111827;
+            color: white;
+            padding: 22px 0;
+            margin-bottom: 30px;
         }
 
-        .header h1 {
-            margin: 0;
-            font-size: 30px;
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
-        .header p {
-            margin: 8px 0 0;
-            color: #6b7280;
-            font-size: 16px;
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
         }
 
-        /* Summary Cards */
-        .cards {
+        .subtitle {
+            color: #cbd5e1;
+            margin-top: 5px;
+            font-size: 14px;
+        }
+
+        .status {
+            background: #16a34a;
+            padding: 8px 14px;
+            border-radius: 20px;
+            font-size: 13px;
+        }
+
+        /* Summary */
+
+        .summary-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
             gap: 18px;
             margin-bottom: 25px;
         }
 
-        .card {
+        .summary-card {
             background: white;
             padding: 22px;
-            border-radius: 15px;
+            border-radius: 14px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.06);
         }
 
-        .card-title {
-            color: #6b7280;
+        .summary-title {
+            color: #64748b;
             font-size: 14px;
-            margin-bottom: 10px;
-        }
-
-        .card-value {
-            font-size: 30px;
-            font-weight: bold;
-        }
-
-        /* Sections */
-        .section {
-            background: white;
-            padding: 25px;
-            border-radius: 16px;
-            margin-bottom: 25px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.06);
-        }
-
-        .section h2 {
-            margin-top: 0;
             margin-bottom: 8px;
         }
 
-        .section-description {
-            color: #6b7280;
-            margin-bottom: 20px;
+        .summary-value {
+            font-size: 30px;
+            font-weight: bold;
+            color: #111827;
         }
 
-        /* AI Box */
-        .ai-box {
-            display: flex;
-            gap: 12px;
+        /* Sections */
+
+        .section {
+            background: white;
+            padding: 25px;
+            border-radius: 14px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+
+        .section-title {
+            font-size: 21px;
+            font-weight: bold;
             margin-bottom: 18px;
         }
 
-        #question {
+        /* AI */
+
+        .question-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        #questionInput {
             flex: 1;
-            padding: 14px 16px;
+            padding: 14px;
             border: 1px solid #d1d5db;
-            border-radius: 10px;
+            border-radius: 9px;
             font-size: 15px;
             outline: none;
         }
 
-        #question:focus {
+        #questionInput:focus {
             border-color: #2563eb;
         }
 
-        .ask-button {
-            padding: 14px 24px;
+        .ask-btn {
+            padding: 14px 22px;
             border: none;
-            border-radius: 10px;
+            border-radius: 9px;
             background: #2563eb;
             color: white;
-            font-size: 15px;
             font-weight: bold;
             cursor: pointer;
         }
 
-        .ask-button:hover {
+        .ask-btn:hover {
             background: #1d4ed8;
         }
 
-        .ask-button:disabled {
-            background: #9ca3af;
-            cursor: not-allowed;
-        }
-
-        /* Quick Questions */
-        .quick-questions {
+        .quick-buttons {
             display: flex;
             flex-wrap: wrap;
-            gap: 10px;
-            margin-bottom: 20px;
+            gap: 9px;
+            margin-bottom: 18px;
         }
 
         .quick-btn {
-            padding: 9px 14px;
+            padding: 9px 13px;
             border: 1px solid #d1d5db;
-            background: #f9fafb;
             border-radius: 20px;
+            background: #f8fafc;
             cursor: pointer;
             font-size: 13px;
         }
 
         .quick-btn:hover {
-            background: #eef2ff;
+            background: #e2e8f0;
         }
 
-        /* AI Response */
         .ai-response {
-            display: none;
             background: #f8fafc;
             border-left: 4px solid #2563eb;
-            padding: 20px;
-            border-radius: 10px;
+            padding: 18px;
+            border-radius: 8px;
             line-height: 1.7;
+            min-height: 80px;
         }
 
-        .ai-response h3 {
+        .evidence {
+            margin-top: 12px;
+            color: #64748b;
+            font-size: 12px;
+        }
+
+        /* Insights */
+
+        .insights-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 18px;
+        }
+
+        .insight-card {
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 18px;
+            background: #ffffff;
+        }
+
+        .insight-card h3 {
             margin-top: 0;
+            margin-bottom: 14px;
+            font-size: 17px;
         }
 
-        .loading {
-            color: #6b7280;
+        .insight-item {
+            padding: 12px;
+            margin-bottom: 9px;
+            background: #f8fafc;
+            border-radius: 8px;
+            font-size: 14px;
         }
 
-        .error {
-            border-left-color: #dc2626;
-            background: #fef2f2;
+        .insight-item:last-child {
+            margin-bottom: 0;
         }
 
-        /* Product Table */
-        .table-container {
+        .item-name {
+            font-weight: bold;
+            color: #111827;
+        }
+
+        .danger {
+            border-left: 4px solid #dc2626;
+        }
+
+        .warning {
+            border-left: 4px solid #f59e0b;
+        }
+
+        .success {
+            border-left: 4px solid #16a34a;
+        }
+
+        .info {
+            border-left: 4px solid #2563eb;
+        }
+
+        .empty {
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        /* Table */
+
+        .table-wrapper {
             overflow-x: auto;
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 15px;
         }
 
         th {
-            background: #f3f4f6;
+            background: #f1f5f9;
             text-align: left;
             padding: 13px;
-            font-size: 14px;
+            font-size: 13px;
         }
 
         td {
@@ -207,32 +262,38 @@
             font-weight: bold;
         }
 
-        /* Footer */
-        .footer {
+        footer {
             text-align: center;
-            color: #6b7280;
+            padding: 25px;
+            color: #64748b;
             font-size: 13px;
-            padding: 15px;
         }
 
         /* Responsive */
-        @media (max-width: 800px) {
-            .cards {
+
+        @media (max-width: 900px) {
+            .summary-grid {
                 grid-template-columns: repeat(2, 1fr);
             }
 
-            .ai-box {
-                flex-direction: column;
-            }
-
-            .ask-button {
-                width: 100%;
+            .insights-grid {
+                grid-template-columns: 1fr;
             }
         }
 
-        @media (max-width: 500px) {
-            .cards {
+        @media (max-width: 600px) {
+            .summary-grid {
                 grid-template-columns: 1fr;
+            }
+
+            .header-content {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 12px;
+            }
+
+            .question-row {
+                flex-direction: column;
             }
         }
     </style>
@@ -240,125 +301,218 @@
 
 <body>
 
+<header>
+    <div class="container header-content">
+        <div>
+            <div class="logo">📊 RetailIQ</div>
+            <div class="subtitle">AI Sales & Inventory Copilot</div>
+        </div>
+
+        <div class="status">● System Online</div>
+    </div>
+</header>
+
+
 <div class="container">
 
-    <!-- Header -->
-    <div class="header">
-        <h1>📊 RetailIQ</h1>
-        <p>AI Sales & Inventory Copilot</p>
-    </div>
+    <!-- SUMMARY -->
 
-    <!-- Summary Cards -->
-    <div class="cards">
+    <div class="summary-grid">
 
-        <div class="card">
-            <div class="card-title">Total Products</div>
-            <div class="card-value" id="totalProducts">-</div>
+        <div class="summary-card">
+            <div class="summary-title">Total Products</div>
+            <div class="summary-value" id="totalProducts">-</div>
         </div>
 
-        <div class="card">
-            <div class="card-title">Total Stock</div>
-            <div class="card-value" id="totalStock">-</div>
+        <div class="summary-card">
+            <div class="summary-title">Total Stock</div>
+            <div class="summary-value" id="totalStock">-</div>
         </div>
 
-        <div class="card">
-            <div class="card-title">Units Sold</div>
-            <div class="card-value" id="unitsSold">-</div>
+        <div class="summary-card">
+            <div class="summary-title">Units Sold</div>
+            <div class="summary-value" id="totalUnitsSold">-</div>
         </div>
 
-        <div class="card">
-            <div class="card-title">Low Stock Products</div>
-            <div class="card-value" id="lowStock">-</div>
+        <div class="summary-card">
+            <div class="summary-title">Low Stock Products</div>
+            <div class="summary-value" id="lowStockProducts">-</div>
         </div>
 
     </div>
 
-    <!-- AI Section -->
+
+    <!-- AI COPILOT -->
+
     <div class="section">
 
-        <h2>🤖 Ask RetailIQ</h2>
-
-        <div class="section-description">
-            Ask questions about sales, inventory, stock-outs and product performance.
+        <div class="section-title">
+            🤖 Ask RetailIQ
         </div>
 
-        <!-- Question Box -->
-        <div class="ai-box">
+        <div class="question-row">
 
             <input
                 type="text"
-                id="question"
-                placeholder="Example: Which products should I restock first?"
+                id="questionInput"
+                placeholder="Ask about sales, inventory, revenue or stock..."
                 onkeydown="handleEnter(event)"
             >
 
-            <button
-                class="ask-button"
-                id="askButton"
-                onclick="askRetailIQ()"
-            >
+            <button class="ask-btn" onclick="askRetailIQ()">
                 Ask AI
             </button>
 
         </div>
 
-        <!-- Quick Questions -->
-        <div class="quick-questions">
 
-            <button
-                class="quick-btn"
-                onclick="setQuestion('Which products are selling the most?')">
+        <div class="quick-buttons">
+
+            <button class="quick-btn"
+                onclick="setQuestion('What are the best selling products?')">
                 🔥 Best Sellers
             </button>
 
-            <button
-                class="quick-btn"
-                onclick="setQuestion('Which products are running out of stock?')">
-                📦 Low Stock
+            <button class="quick-btn"
+                onclick="setQuestion('Which products are low in stock?')">
+                🚨 Low Stock
             </button>
 
-            <button
-                class="quick-btn"
-                onclick="setQuestion('Which products are slow-moving?')">
-                📉 Slow Moving
+            <button class="quick-btn"
+                onclick="setQuestion('Which products are slow moving?')">
+                🐢 Slow Moving
             </button>
 
-            <button
-                class="quick-btn"
-                onclick="setQuestion('Which product generated the highest revenue?')">
+            <button class="quick-btn"
+                onclick="setQuestion('Which products generate the highest revenue?')">
                 💰 Highest Revenue
             </button>
 
-            <button
-                class="quick-btn"
-                onclick="setQuestion('Which products should I restock first and why?')">
-                🛒 Restock Advice
+            <button class="quick-btn"
+                onclick="setQuestion('Which products should I restock first?')">
+                📦 Restock Advice
             </button>
 
         </div>
 
-        <!-- AI Response -->
-        <div
-            class="ai-response"
-            id="aiResponse">
+
+        <div class="ai-response" id="aiResponse">
+            Ask a question to get an AI-powered analysis.
+        </div>
+
+        <div class="evidence">
+            📁 Evidence: sales.csv + inventory.csv + products.csv
         </div>
 
     </div>
 
-    <!-- Product Analysis -->
+
+    <!-- SMART BUSINESS INSIGHTS -->
+
     <div class="section">
 
-        <h2>📦 Product Inventory & Sales</h2>
-
-        <div class="section-description">
-            Current inventory, sales and revenue information.
+        <div class="section-title">
+            🧠 Smart Business Insights
         </div>
 
-        <div class="table-container">
+        <div class="insights-grid">
+
+            <!-- STOCK OUT RISK -->
+
+            <div class="insight-card">
+
+                <h3>🚨 Stock-out Risk</h3>
+
+                <div id="stockOutRisk">
+                    Loading...
+                </div>
+
+            </div>
+
+
+            <!-- RESTOCK PRIORITY -->
+
+            <div class="insight-card">
+
+                <h3>📦 Restock Priority</h3>
+
+                <div id="restockPriority">
+                    Loading...
+                </div>
+
+            </div>
+
+
+            <!-- SLOW MOVING -->
+
+            <div class="insight-card">
+
+                <h3>🐢 Slow Moving Products</h3>
+
+                <div id="slowMoving">
+                    Loading...
+                </div>
+
+            </div>
+
+
+            <!-- OVERSTOCK -->
+
+            <div class="insight-card">
+
+                <h3>📊 Overstock Products</h3>
+
+                <div id="overstock">
+                    Loading...
+                </div>
+
+            </div>
+
+
+            <!-- TOP SELLERS -->
+
+            <div class="insight-card">
+
+                <h3>🔥 Top Sellers</h3>
+
+                <div id="topSellers">
+                    Loading...
+                </div>
+
+            </div>
+
+
+            <!-- REVENUE LEADERS -->
+
+            <div class="insight-card">
+
+                <h3>💰 Revenue Leaders</h3>
+
+                <div id="revenueLeaders">
+                    Loading...
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- PRODUCT TABLE -->
+
+    <div class="section">
+
+        <div class="section-title">
+            📦 Product Inventory & Sales
+        </div>
+
+        <div class="table-wrapper">
 
             <table>
 
                 <thead>
+
                     <tr>
                         <th>Product</th>
                         <th>Category</th>
@@ -368,12 +522,17 @@
                         <th>Revenue</th>
                         <th>Status</th>
                     </tr>
+
                 </thead>
 
                 <tbody id="productTable">
+
                     <tr>
-                        <td colspan="7">Loading...</td>
+                        <td colspan="7">
+                            Loading...
+                        </td>
                     </tr>
+
                 </tbody>
 
             </table>
@@ -382,16 +541,20 @@
 
     </div>
 
-    <div class="footer">
-        RetailIQ • AI Sales & Inventory Copilot
-    </div>
-
 </div>
+
+
+<footer>
+    RetailIQ — AI-powered retail intelligence
+</footer>
 
 
 <script>
 
-    // Load store summary
+    /* =========================
+       SUMMARY
+    ========================= */
+
     async function loadSummary() {
 
         try {
@@ -406,21 +569,27 @@
             document.getElementById("totalStock").textContent =
                 data.total_stock;
 
-            document.getElementById("unitsSold").textContent =
+            document.getElementById("totalUnitsSold").textContent =
                 data.total_units_sold;
 
-            document.getElementById("lowStock").textContent =
+            document.getElementById("lowStockProducts").textContent =
                 data.low_stock_products;
 
-        } catch (error) {
+        }
 
-            console.error("Summary error:", error);
+        catch (error) {
+
+            console.error(error);
 
         }
+
     }
 
 
-    // Load products
+    /* =========================
+       PRODUCTS
+    ========================= */
+
     async function loadProducts() {
 
         try {
@@ -429,7 +598,8 @@
 
             const products = await response.json();
 
-            const table = document.getElementById("productTable");
+            const table =
+                document.getElementById("productTable");
 
             table.innerHTML = "";
 
@@ -438,45 +608,348 @@
                 const row = document.createElement("tr");
 
                 const statusClass =
-                    product.Status === "LOW STOCK"
-                        ? "low-stock"
-                        : "ok-stock";
+                    product.status === "LOW STOCK"
+                    ? "low-stock"
+                    : "ok-stock";
 
                 row.innerHTML = `
-                    <td>${product.Product}</td>
-                    <td>${product.Category}</td>
-                    <td>₹${Number(product.Price).toLocaleString("en-IN")}</td>
-                    <td>${product["Units Sold"]}</td>
-                    <td>${product["Current Stock"]}</td>
-                    <td>₹${Number(product.Revenue).toLocaleString("en-IN")}</td>
-                    <td class="${statusClass}">
-                        ${product.Status}
+
+                    <td>
+                        <strong>${product.product_name}</strong>
                     </td>
+
+                    <td>
+                        ${product.category}
+                    </td>
+
+                    <td>
+                        ₹${Number(product.price).toLocaleString()}
+                    </td>
+
+                    <td>
+                        ${product.units_sold}
+                    </td>
+
+                    <td>
+                        ${product.current_stock}
+                    </td>
+
+                    <td>
+                        ₹${Number(product.revenue).toLocaleString()}
+                    </td>
+
+                    <td class="${statusClass}">
+                        ${product.status}
+                    </td>
+
                 `;
 
                 table.appendChild(row);
 
             });
 
-        } catch (error) {
+        }
 
-            console.error("Product error:", error);
+        catch (error) {
+
+            console.error(error);
+
+            document.getElementById("productTable").innerHTML =
+                `<tr>
+                    <td colspan="7">Unable to load products.</td>
+                </tr>`;
 
         }
+
     }
 
 
-    // Set quick question
+    /* =========================
+       SMART INSIGHTS
+    ========================= */
+
+    async function loadInsights() {
+
+        try {
+
+            const response =
+                await fetch("/api/insights");
+
+            const data =
+                await response.json();
+
+
+            /* STOCK OUT */
+
+            const stockOut =
+                document.getElementById("stockOutRisk");
+
+            stockOut.innerHTML = "";
+
+            if (data.stock_out_risk.length === 0) {
+
+                stockOut.innerHTML =
+                    `<div class="empty">No immediate stock-out risk.</div>`;
+
+            }
+            else {
+
+                data.stock_out_risk.forEach(item => {
+
+                    stockOut.innerHTML += `
+
+                        <div class="insight-item danger">
+
+                            <div class="item-name">
+                                ${item.product_name}
+                            </div>
+
+                            Stock: ${item.current_stock}
+                            <br>
+
+                            Coverage: ${item.stock_days} days
+                            <br>
+
+                            Daily sales: ${item.avg_daily_sales}
+
+                        </div>
+
+                    `;
+
+                });
+
+            }
+
+
+            /* RESTOCK */
+
+            const restock =
+                document.getElementById("restockPriority");
+
+            restock.innerHTML = "";
+
+            if (data.restock_priority.length === 0) {
+
+                restock.innerHTML =
+                    `<div class="empty">No products require restocking.</div>`;
+
+            }
+            else {
+
+                data.restock_priority.forEach(item => {
+
+                    restock.innerHTML += `
+
+                        <div class="insight-item warning">
+
+                            <div class="item-name">
+                                ${item.product_name}
+                            </div>
+
+                            Current stock:
+                            ${item.current_stock}
+                            <br>
+
+                            Reorder level:
+                            ${item.reorder_level}
+                            <br>
+
+                            Suggested reorder:
+                            <strong>${item.suggested_reorder}</strong>
+
+                        </div>
+
+                    `;
+
+                });
+
+            }
+
+
+            /* SLOW MOVING */
+
+            const slow =
+                document.getElementById("slowMoving");
+
+            slow.innerHTML = "";
+
+            if (data.slow_moving.length === 0) {
+
+                slow.innerHTML =
+                    `<div class="empty">No slow-moving products.</div>`;
+
+            }
+            else {
+
+                data.slow_moving.forEach(item => {
+
+                    slow.innerHTML += `
+
+                        <div class="insight-item">
+
+                            <div class="item-name">
+                                ${item.product_name}
+                            </div>
+
+                            Units sold:
+                            ${item.units_sold}
+                            <br>
+
+                            Current stock:
+                            ${item.current_stock}
+                            <br>
+
+                            Revenue:
+                            ₹${Number(item.revenue).toLocaleString()}
+
+                        </div>
+
+                    `;
+
+                });
+
+            }
+
+
+            /* OVERSTOCK */
+
+            const overstock =
+                document.getElementById("overstock");
+
+            overstock.innerHTML = "";
+
+            if (data.overstock.length === 0) {
+
+                overstock.innerHTML =
+                    `<div class="empty">No major overstock detected.</div>`;
+
+            }
+            else {
+
+                data.overstock.forEach(item => {
+
+                    overstock.innerHTML += `
+
+                        <div class="insight-item info">
+
+                            <div class="item-name">
+                                ${item.product_name}
+                            </div>
+
+                            Current stock:
+                            ${item.current_stock}
+                            <br>
+
+                            Stock coverage:
+                            ${item.stock_days} days
+                            <br>
+
+                            Units sold:
+                            ${item.units_sold}
+
+                        </div>
+
+                    `;
+
+                });
+
+            }
+
+
+            /* TOP SELLERS */
+
+            const topSellers =
+                document.getElementById("topSellers");
+
+            topSellers.innerHTML = "";
+
+            data.top_sellers.forEach((item, index) => {
+
+                topSellers.innerHTML += `
+
+                    <div class="insight-item success">
+
+                        <div class="item-name">
+                            #${index + 1}
+                            ${item.product_name}
+                        </div>
+
+                        Units sold:
+                        ${item.units_sold}
+                        <br>
+
+                        Revenue:
+                        ₹${Number(item.revenue).toLocaleString()}
+
+                    </div>
+
+                `;
+
+            });
+
+
+            /* REVENUE LEADERS */
+
+            const revenueLeaders =
+                document.getElementById("revenueLeaders");
+
+            revenueLeaders.innerHTML = "";
+
+            data.revenue_leaders.forEach((item, index) => {
+
+                revenueLeaders.innerHTML += `
+
+                    <div class="insight-item">
+
+                        <div class="item-name">
+                            #${index + 1}
+                            ${item.product_name}
+                        </div>
+
+                        Revenue:
+                        <strong>
+                            ₹${Number(item.revenue).toLocaleString()}
+                        </strong>
+
+                        <br>
+
+                        Units sold:
+                        ${item.units_sold}
+
+                    </div>
+
+                `;
+
+            });
+
+        }
+
+        catch (error) {
+
+            console.error(error);
+
+            document.getElementById("stockOutRisk").innerHTML =
+                `<div class="empty">Unable to load insights.</div>`;
+
+        }
+
+    }
+
+
+    /* =========================
+       AI QUESTION
+    ========================= */
+
     function setQuestion(question) {
 
-        document.getElementById("question").value = question;
+        document.getElementById("questionInput").value =
+            question;
 
-        document.getElementById("question").focus();
+        askRetailIQ();
 
     }
 
 
-    // Enter key support
     function handleEnter(event) {
 
         if (event.key === "Enter") {
@@ -488,127 +961,112 @@
     }
 
 
-    // Ask Gemini
     async function askRetailIQ() {
 
-        const questionInput =
-            document.getElementById("question");
+        const input =
+            document.getElementById("questionInput");
 
         const responseBox =
             document.getElementById("aiResponse");
 
-        const askButton =
-            document.getElementById("askButton");
-
         const question =
-            questionInput.value.trim();
+            input.value.trim();
 
 
         if (!question) {
 
-            responseBox.style.display = "block";
-
-            responseBox.className = "ai-response error";
-
             responseBox.innerHTML =
-                "<strong>Please enter a question.</strong>";
+                "Please enter a question.";
 
             return;
 
         }
 
 
-        // Loading state
-        responseBox.style.display = "block";
-
-        responseBox.className = "ai-response";
-
         responseBox.innerHTML =
-            "<div class='loading'>🤖 RetailIQ is analyzing your store data...</div>";
-
-        askButton.disabled = true;
-
-        askButton.textContent = "Thinking...";
+            "🤖 RetailIQ is analyzing your store data...";
 
 
         try {
 
-            const response = await fetch("/api/ask", {
+            const response =
+                await fetch("/api/ask", {
 
-                method: "POST",
+                    method: "POST",
 
-                headers: {
-                    "Content-Type": "application/json"
-                },
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
 
-                body: JSON.stringify({
-                    question: question
-                })
+                    body: JSON.stringify({
+                        question: question
+                    })
 
-            });
-
-
-            const data = await response.json();
+                });
 
 
-            if (!response.ok) {
+            const data =
+                await response.json();
 
-                throw new Error(
-                    data.answer ||
-                    "Unable to process the request."
-                );
+
+            if (data.answer) {
+
+                let answer = data.answer;
+
+                answer = answer.replace(/###\s*/g, "");
+
+                answer =
+                    answer.replace(
+                        /\*\*(.*?)\*\*/g,
+                        "<strong>$1</strong>"
+                    );
+
+                answer =
+                    answer.replace(
+                        /^\s*\\?[*-]\s*/gm,
+                        "• "
+                    );
+
+                answer =
+                    answer.replace(
+                        /\n/g,
+                        "<br>"
+                    );
+
+                responseBox.innerHTML =
+                    answer;
+
+            }
+            else {
+
+                responseBox.innerHTML =
+                    "❌ Gemini could not process the request.";
 
             }
 
+        }
 
-            // Convert basic Markdown to HTML
-            let answer = data.answer || "No answer received.";
+        catch (error) {
 
-            answer = answer
-                .replace(/\\###/g, "")
-                .replace(/### (.*)/g, "<h3>$1</h3>")
-                .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
-                .replace(/\n/g, "<br>")
-                .replace(/\\\*/g, "•");
+            console.error(error);
 
-
-            responseBox.innerHTML = `
-                <h3>💡 RetailIQ Answer</h3>
-                <div>${answer}</div>
-                <hr>
-                <small>
-                    📁 Evidence: sales.csv + inventory.csv + products.csv
-                </small>
-            `;
-
-
-        } catch (error) {
-
-            console.error("AI error:", error);
-
-            responseBox.className = "ai-response error";
-
-            responseBox.innerHTML = `
-                <strong>❌ Gemini could not process the request.</strong>
-                <br><br>
-                Please check the API connection.
-            `;
-
-        } finally {
-
-            askButton.disabled = false;
-
-            askButton.textContent = "Ask AI";
+            responseBox.innerHTML =
+                "❌ Unable to connect to the AI service.";
 
         }
 
     }
 
 
-    // Start dashboard
+    /* =========================
+       INITIAL LOAD
+    ========================= */
+
     loadSummary();
 
     loadProducts();
+
+    loadInsights();
 
 </script>
 
